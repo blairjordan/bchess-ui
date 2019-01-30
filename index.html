@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="">
+    <head>
+        <meta charset="utf-8">
+        <title>bchess & chessboardjs</title>
+        <meta name="description" content="">
+        <link rel = "stylesheet" type = "text/css" href = "css/chessboard-0.3.0.min.css" />
+        <script src="https://cdn.jsdelivr.net/npm/bchess@1.0.4/src/js/bchess.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/chessboardjs@0.0.1/www/js/chessboard.min.js"></script>
+    </head>
+    <body>
+        <h1>bchess & chessboardjs</h1>
+        <div id="board" style="width: 400px"></div>
+        <p>FEN: <span id="fen"></span></p>
+        <script>
+        const chess = new Chess({});
+        const fenEl = $('#fen');
+
+        const onDrop = function(source, target) {
+            // see if the move is legal
+            const move = chess.move({
+                from: source,
+                to: target,
+                promotion: 'Q' // NOTE: always promote to a queen for example simplicity
+            });
+
+            // illegal move
+            if (move === Action.INVALID_ACTION) return 'snapback';
+            
+            updateStatus();
+        };
+
+        const updateStatus = () => {
+            fenEl.html(chess.fen());
+        }
+
+        var cfg = {
+            draggable: true,
+            position: 'start',
+            onDrop: onDrop,
+            orientation: chess.myColor,
+            start: chess.fen()
+        };
+        console.log(chess.myColor);
+        const board = ChessBoard('board', cfg);
+      </script>
+    </body>
+</html>
