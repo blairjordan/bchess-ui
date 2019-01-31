@@ -5,9 +5,11 @@
         <title>bchess & chessboardjs</title>
         <meta name="description" content="">
         <link rel = "stylesheet" type = "text/css" href = "css/chessboard-0.3.0.min.css" />
-        <script src="https://cdn.jsdelivr.net/npm/bchess@1.0.4/src/js/bchess.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bchess@1/dist/bchess.min.js"></script>
+        <script src='https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.2.0/socket.io.js'></script>
         <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/chessboardjs@0.0.1/www/js/chessboard.min.js"></script>
+        <script  src="js/client.js"></script>
     </head>
     <body>
         <h1>bchess & chessboardjs</h1>
@@ -42,7 +44,7 @@
             orientation: chess.myColor,
             start: chess.fen()
         };
-        console.log(chess.myColor);
+
         const board = ChessBoard('board', cfg);
       </script>
     </body>
