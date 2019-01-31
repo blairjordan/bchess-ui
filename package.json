@@ -1,0 +1,23 @@
+{
+  "name": "bchess-ui",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/blairjordan/bchess-ui.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/blairjordan/bchess-ui/issues"
+  },
+  "homepage": "https://github.com/blairjordan/bchess-ui#readme",
+  "dependencies": {
+    "bchess": "^1.0.5",
+    "socket.io": "^2.2.0"
+  }
+}
