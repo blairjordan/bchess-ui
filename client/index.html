@@ -9,7 +9,6 @@
         <script src='https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.2.0/socket.io.js'></script>
         <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/chessboardjs@0.0.1/www/js/chessboard.min.js"></script>
-        <script  src="js/client.js"></script>
     </head>
     <body>
         <h1>bchess & chessboardjs</h1>
@@ -19,22 +18,19 @@
         const chess = new Chess({});
         const fenEl = $('#fen');
 
-        const onDrop = function(source, target) {
+        const onDrop = function(from, to) {
             // see if the move is legal
-            const move = chess.move({
-                from: source,
-                to: target,
-                promotion: 'Q' // NOTE: always promote to a queen for example simplicity
-            });
+            const move = chess.move({from,to,promotion: 'Q'}); // NOTE: always promote to a queen for example simplicity
 
             // illegal move
             if (move === Action.INVALID_ACTION) return 'snapback';
             
-            updateStatus();
+            updateStatus(from, to);
         };
 
-        const updateStatus = () => {
+        const updateStatus = (from, to) => {
             fenEl.html(chess.fen());
+            socket.emit("move", {id, move: {from, to}});
         }
 
         var cfg = {
@@ -46,6 +42,7 @@
         };
 
         const board = ChessBoard('board', cfg);
-      </script>
+        </script>
+        <script  src="js/client.js"></script>
     </body>
 </html>

@@ -5,8 +5,10 @@ const chess = new Chess();
 io.on("connect", function(socket){
     console.log("a user connected");
     socket.on("move", function(data){
+        console.log(data);
         const {id, move} = data;
         const {from, to} = move;
-        socket.broadcast.emit("move",{id, move: {from, to}});
+        const action = chess.move({from, to}); // read response .. if valid etc.
+        socket.broadcast.emit("move",{id, from, to, fen: chess.fen()});
     });
 });
