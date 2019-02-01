@@ -5,44 +5,28 @@
         <title>bchess & chessboardjs</title>
         <meta name="description" content="">
         <link rel = "stylesheet" type = "text/css" href = "css/chessboard-0.3.0.min.css" />
-        <script src="https://cdn.jsdelivr.net/npm/bchess@1/dist/bchess.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bchess@1/dist/bchess.js"></script>
         <script src='https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.2.0/socket.io.js'></script>
         <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
+        <script>let module = {};</script>
         <script src="https://cdn.jsdelivr.net/npm/chessboardjs@0.0.1/www/js/chessboard.min.js"></script>
     </head>
     <body>
-        <h1>bchess & chessboardjs</h1>
-        <div id="board" style="width: 400px"></div>
-        <p>FEN: <span id="fen"></span></p>
-        <script>
-        const chess = new Chess({});
-        const fenEl = $('#fen');
-
-        const onDrop = function(from, to) {
-            // see if the move is legal
-            const move = chess.move({from,to,promotion: 'Q'}); // NOTE: always promote to a queen for example simplicity
-
-            // illegal move
-            if (move === Action.INVALID_ACTION) return 'snapback';
-            
-            updateStatus(from, to);
-        };
-
-        const updateStatus = (from, to) => {
-            fenEl.html(chess.fen());
-            socket.emit("move", {id, move: {from, to}});
-        }
-
-        var cfg = {
-            draggable: true,
-            position: 'start',
-            onDrop: onDrop,
-            orientation: chess.myColor,
-            start: chess.fen()
-        };
-
-        const board = ChessBoard('board', cfg);
-        </script>
+        <div id="setup">
+            <span>color:
+                <select id="color">
+                    <option value="white">White</option>
+                    <option value="black">Black</option>
+                </select>
+            </span>
+            <button id="start">Start</button>
+        </div>
+        <div id="game" style="display:none;">
+            <h1>bchess & chessboardjs</h1>
+            <div id="board" style="width: 400px"></div>
+            <p><span id="turn"></span></p>
+            <p>FEN: <span id="fen"></span></p>
+        </div>
         <script  src="js/client.js"></script>
     </body>
 </html>

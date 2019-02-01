@@ -17,7 +17,7 @@
   },
   "homepage": "https://github.com/blairjordan/bchess-ui#readme",
   "dependencies": {
-    "bchess": "^1.0.5",
+    "bchess": "^1.0.6",
     "socket.io": "^2.2.0"
   }
 }

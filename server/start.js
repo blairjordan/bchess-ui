@@ -4,11 +4,15 @@ const chess = new Chess();
 
 io.on("connect", function(socket){
     console.log("a user connected");
+    socket.emit("move", {fen: chess.fen(), turn: chess.turn()});
     socket.on("move", function(data){
-        console.log(data);
-        const {id, move} = data;
+        const {id, move, color} = data;
         const {from, to} = move;
-        const action = chess.move({from, to}); // read response .. if valid etc.
-        socket.broadcast.emit("move",{id, from, to, fen: chess.fen()});
+        if (color === chess.turn()) {
+            const action = chess.move({from, to});
+
+            if (action !== Action.INVALID_ACTION)
+                socket.broadcast.emit("move",{id, from, to, fen: chess.fen(), turn: chess.turn()});
+        }
     });
 });
