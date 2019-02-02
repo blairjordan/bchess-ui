@@ -1,5 +1,5 @@
 const fs = require("fs");
-const io = require("socket.io")(3001);
+const io = require("socket.io")(process.env.PORT || 3001);
 const { Chess, Piece, Action } = require("bchess");
 
 let dir = `${__dirname}/games`;
