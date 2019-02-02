@@ -1,10 +1,12 @@
 $("#start").on("click", () => {
     $("#setup").hide();
     $("#game").show();
-    init($("#color").val());
+    init($("#game-id").val(), $("#color").val());
 });
 
-const init = color => {
+const init = (gameId, color) => {
+    const socket = io.connect("http://localhost:3001");
+
     let playerTurn = false;
     const chess = new Chess({color});
     const onDrop = function(from, to) {
@@ -21,7 +23,8 @@ const init = color => {
         // illegal move?
         if (move === Action.INVALID_ACTION) return 'snapback';
         
-        socket.emit("move", {id, move: {from, to}, color: chess.myColor});
+        console.log(gameId);
+        socket.emit("move", {gameId, move: {from, to}, color: chess.myColor});
         playerTurn = false;
 
         updateUI();
@@ -41,9 +44,11 @@ const init = color => {
 
     const board = ChessBoard('board', cfg);
     
-    const socket = io.connect("http://localhost:3001");
     socket.on("connect", function() {
+        socket.emit("join", { gameId });
         socket.on("move", function (data) {
+            console.log("got move");
+            
             const { fen, turn } = data;
             playerTurn = (turn === chess.myColor);
             chess.input({fen});
