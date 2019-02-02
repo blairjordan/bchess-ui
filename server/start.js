@@ -1,12 +1,12 @@
 const fs = require("fs");
-const express = require('express');
-const path = require('path');
+const express = require("express");
+const path = require("path");
 const PORT = process.env.PORT || 3001;
-const INDEX = path.join(__dirname, '../client/index.html');
+const INDEX = path.join(__dirname, "../client/index.html");
 const { Chess, Piece, Action } = require("bchess");
 
 const server = express()
-    .use(express.static(path.join(__dirname, '../client')))
+    .use(express.static(path.join(__dirname, "../client")))
     .use((req, res) => res.sendFile(INDEX) )
     .listen(PORT, () => console.log(`Listening on ${ PORT }`));
 
@@ -19,12 +19,12 @@ if (!fs.existsSync(dir)){
 
 const saveGame = (opts) => {
     const { fen, gamePath } = opts;
-    fs.writeFileSync(gamePath, JSON.stringify({ fen }), "UTF-8", {'flags': 'w+'});
+    fs.writeFileSync(gamePath, JSON.stringify({ fen }), "UTF-8", {"flags": "w+"});
 };
 
 const loadGame = (opts) => {
     const { gameId, chess } = opts;
-    chess.input({fen: JSON.parse(fs.readFileSync(getGamePath(gameId), 'utf8')).fen});
+    chess.input({fen: JSON.parse(fs.readFileSync(getGamePath(gameId), "utf8")).fen});
 };
 
 const getGamePath = gameId => `${dir}/${gameId}.json`;
