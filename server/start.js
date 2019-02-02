@@ -6,6 +6,7 @@ const INDEX = path.join(__dirname, '../client/index.html');
 const { Chess, Piece, Action } = require("bchess");
 
 const server = express()
+    .use(express.static(path.join(__dirname, '../client')))
     .use((req, res) => res.sendFile(INDEX) )
     .listen(PORT, () => console.log(`Listening on ${ PORT }`));
 
