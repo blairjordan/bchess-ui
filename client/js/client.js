@@ -7,12 +7,11 @@ $("#start").on("click", () => {
 const init = (gameId, color) => {
     const socket = io.connect("http://localhost:3001");
 
-    let playerTurn = false;
     const chess = new Chess({color});
     const onDrop = function(from, to) {
 
         // my turn?
-        if (!playerTurn) return 'snapback';
+        //if (!playerTurn) return 'snapback';
         
         // moving my piece?
         if (chess.get({square: from}).piece.color !== chess.myColor) return 'snapback';
@@ -23,22 +22,29 @@ const init = (gameId, color) => {
         // illegal move?
         if (move === Action.INVALID_ACTION) return 'snapback';
         
-        console.log(gameId);
         socket.emit("move", {gameId, move: {from, to}, color: chess.myColor});
-        playerTurn = false;
+        
+        console.log(chess.fen());
 
         updateUI();
     };
 
+    // update the board position after the piece snap 
+    // for castling, en passant, pawn promotion
+    const onSnapEnd = function() {
+        board.position(chess.fen());
+    };
+
     const updateUI = (from, to) => {
         $('#fen').html(chess.fen());
-        $('#turn').html(`${(playerTurn) ? 'Your turn' : "Waiting for opponent"} to move.`);
+        //$('#turn').html(`${(playerTurn) ? 'Your turn' : "Waiting for opponent"} to move.`);
     }
 
     var cfg = {
         draggable: true,
         position: 'start',
-        onDrop: onDrop,
+        onDrop,
+        onSnapEnd,
         orientation: chess.myColor
     };
 
@@ -48,9 +54,7 @@ const init = (gameId, color) => {
         socket.emit("join", { gameId });
         socket.on("move", function (data) {
             console.log("got move");
-            
-            const { fen, turn } = data;
-            playerTurn = (turn === chess.myColor);
+            const { fen } = data;
             chess.input({fen});
             board.position(fen);
             updateUI();
