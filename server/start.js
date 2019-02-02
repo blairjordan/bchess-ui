@@ -1,6 +1,15 @@
 const fs = require("fs");
-const io = require("socket.io")(process.env.PORT || 3001);
+const express = require('express');
+const path = require('path');
+const PORT = process.env.PORT || 3001;
+const INDEX = path.join(__dirname, '../client/index.html');
 const { Chess, Piece, Action } = require("bchess");
+
+const server = express()
+    .use((req, res) => res.sendFile(INDEX) )
+    .listen(PORT, () => console.log(`Listening on ${ PORT }`));
+
+const io = require("socket.io")(server);
 
 let dir = `${__dirname}/games`;
 if (!fs.existsSync(dir)){
@@ -8,16 +17,16 @@ if (!fs.existsSync(dir)){
 }
 
 const saveGame = (opts) => {
-    const { fen, path } = opts;
-    fs.writeFileSync(path, JSON.stringify({ fen }), "UTF-8", {'flags': 'w+'});
+    const { fen, gamePath } = opts;
+    fs.writeFileSync(gamePath, JSON.stringify({ fen }), "UTF-8", {'flags': 'w+'});
 };
 
 const loadGame = (opts) => {
     const { gameId, chess } = opts;
-    chess.input({fen: JSON.parse(fs.readFileSync(path(gameId), 'utf8')).fen});
+    chess.input({fen: JSON.parse(fs.readFileSync(getGamePath(gameId), 'utf8')).fen});
 };
 
-const path = gameId => `${dir}/${gameId}.json`;
+const getGamePath = gameId => `${dir}/${gameId}.json`;
 
 console.log("server started");
 
@@ -27,12 +36,12 @@ io.on("connect", function(socket){
         const chess = new Chess();
         const { gameId } = data;
         socket.join(gameId);
-        if (fs.existsSync(path(gameId))){
+        if (fs.existsSync(getGamePath(gameId))){
             // load game
             loadGame({gameId, chess});
         } else {
             // new game
-            saveGame({ fen: chess.fen(), path: path(gameId) });
+            saveGame({ fen: chess.fen(), gamePath: getGamePath(gameId) });
         }
         socket.emit("move", {fen: chess.fen()});
     });
@@ -46,7 +55,7 @@ io.on("connect", function(socket){
         const action = chess.move({from, to});
         if (action !== Action.INVALID_ACTION) {
             const fen = chess.fen();
-            saveGame({ fen, path: path(gameId) });
+            saveGame({ fen, gamePath: getGamePath(gameId) });
             socket.broadcast.to(gameId).emit("move",{from, to, fen});
         }
     });

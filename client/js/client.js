@@ -5,7 +5,7 @@ $("#start").on("click", () => {
 });
 
 const init = (gameId, color) => {
-    const socket = io.connect("http://localhost:3001");
+    const socket = io.connect(location.origin);
 
     const chess = new Chess({color});
     const onDrop = function(from, to) {
