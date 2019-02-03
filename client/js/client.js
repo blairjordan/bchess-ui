@@ -1,17 +1,23 @@
 $("#start").on("click", () => {
     $("#setup").hide();
     $("#game").show();
-    init($("#game-id").val(), $("#color").val());
+    $("#game-id").html($("#game-id-input").val());
+    init($("#game-id-input").val(), $("#color").val());
 });
 
 const init = (gameId, color) => {
     const socket = io.connect(location.origin);
 
     const chess = new Chess({color});
+
+    const myTurn = () => {
+        return chess.turn() === color;
+    };
+
     const onDrop = function(from, to) {
 
         // my turn?
-        //if (!playerTurn) return "snapback";
+        if (!myTurn()) return "snapback";
         
         // moving my piece?
         if (chess.get({square: from}).piece.color !== chess.myColor) return "snapback";
@@ -23,8 +29,6 @@ const init = (gameId, color) => {
         if (move === Action.INVALID_ACTION) return "snapback";
         
         socket.emit("move", {gameId, move: {from, to}, color: chess.myColor});
-        
-        console.log(chess.fen());
 
         updateUI();
     };
@@ -32,12 +36,12 @@ const init = (gameId, color) => {
     // update the board position after the piece snap 
     // for castling, en passant, pawn promotion
     const onSnapEnd = function() {
-        board.position(chess.fen());
+        board.position(chess.fen({turn:true}));
     };
 
     const updateUI = (from, to) => {
-        $("#fen").html(chess.fen());
-        //$("#turn").html(`${(playerTurn) ? "Your turn" : "Waiting for opponent"} to move.`);
+        $("#fen").html(chess.fen({turn:true}));
+        $("#turn").html(`${myTurn() ? "Your turn" : "Waiting for opponent"} to move.`);
     }
 
     var cfg = {
@@ -53,7 +57,6 @@ const init = (gameId, color) => {
     socket.on("connect", function() {
         socket.emit("join", { gameId });
         socket.on("move", function (data) {
-            console.log("got move");
             const { fen } = data;
             chess.input({fen});
             board.position(fen);

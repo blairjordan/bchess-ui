@@ -3,7 +3,7 @@ const express = require("express");
 const path = require("path");
 const PORT = process.env.PORT || 3001;
 const INDEX = path.join(__dirname, "../client/index.html");
-const { Chess, Piece, Action } = require("bchess");
+const { Chess, Action } = require("bchess");
 
 const server = express()
     .use(express.static(path.join(__dirname, "../client")))
@@ -42,7 +42,7 @@ io.on("connect", function(socket){
             loadGame({gameId, chess});
         } else {
             // new game
-            saveGame({ fen: chess.fen(), gamePath: getGamePath(gameId) });
+            saveGame({ fen: chess.fen({turn:true}), gamePath: getGamePath(gameId) });
         }
         socket.emit("move", {fen: chess.fen()});
     });
@@ -55,7 +55,7 @@ io.on("connect", function(socket){
         console.log(data);
         const action = chess.move({from, to});
         if (action !== Action.INVALID_ACTION) {
-            const fen = chess.fen();
+            const fen = chess.fen({turn:true});
             saveGame({ fen, gamePath: getGamePath(gameId) });
             socket.broadcast.to(gameId).emit("move",{from, to, fen});
         }

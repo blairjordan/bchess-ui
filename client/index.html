@@ -5,7 +5,7 @@
         <title>bchess & chessboardjs</title>
         <meta name="description" content="">
         <link rel = "stylesheet" type = "text/css" href = "css/chessboard-0.3.0.min.css" />
-        <script src="https://cdn.jsdelivr.net/npm/bchess@1/dist/bchess.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bchess@1.0.7/dist/bchess.js"></script>
         <script src='https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.2.0/socket.io.js'></script>
         <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
         <script>let module = {};</script>
@@ -14,7 +14,7 @@
     <body>
         <div id="setup">
             <div>Game ID
-                <input id="game-id" type="text" />
+                <input id="game-id-input" type="text" />
             </div>
             <div>Color:
                 <select id="color">
@@ -26,6 +26,7 @@
         </div>
         <div id="game" style="display:none;">
             <h1>bchess & chessboardjs</h1>
+            <div>Game: <span id="game-id"></span></div>
             <div id="board" style="width: 400px"></div>
             <p><span id="turn"></span></p>
             <p>FEN: <span id="fen"></span></p>
