@@ -29,14 +29,14 @@ const loadGame = (opts) => {
 
 const getGamePath = gameId => `${dir}/${gameId}.json`;
 
-console.log("server started");
+console.log("Server started");
 
 io.on("connect", function(socket){
     socket.on("join", data => {
-        console.log("a user joined the game");
         const chess = new Chess();
         const { gameId } = data;
         socket.join(gameId);
+        console.log(`A user joined game ${gameId}`);
         if (fs.existsSync(getGamePath(gameId))){
             // load game
             loadGame({gameId, chess});

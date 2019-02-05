@@ -4,17 +4,27 @@
         <meta charset="utf-8">
         <title>bchess & chessboardjs</title>
         <meta name="description" content="">
-        <link rel = "stylesheet" type = "text/css" href = "css/chessboard-0.3.0.min.css" />
+        <link rel = "stylesheet" type = "text/css" href= "css/chessboard-0.3.0.min.css" />
+        <link rel = "stylesheet" type = "text/css" href= "https://cdn.jsdelivr.net/npm/bootstrap@4.2.1/dist/css/bootstrap.min.css" />
+        <script>let module = {};</script>
+        <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/bchess@1.0.7/dist/bchess.js"></script>
         <script src='https://cdn.jsdelivr.net/npm/socket.io-client@2.2.0/dist/socket.io.js'></script>
-        <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
-        <script>let module = {};</script>
         <script src="https://cdn.jsdelivr.net/npm/chessboardjs@0.0.1/www/js/chessboard.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.2.1/dist/js/bootstrap.min.js"></script>
     </head>
     <body>
         <div id="setup">
-            <div>Game ID
-                <input id="game-id-input" type="text" />
+            <div>Game type:
+                <select id="gametype">
+                    <option value="self" selected="selected">Sandbox (no opponent)</option>
+                    <option value="network">VS Player</option>
+                </select>
+            </div>
+            <div id="gametype-network" style="display:none;">
+                <div>Game ID
+                    <input id="game-id-input" type="text" />
+                </div>
             </div>
             <div>Color:
                 <select id="color">
